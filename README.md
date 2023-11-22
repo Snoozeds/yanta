@@ -10,7 +10,7 @@ You can download pre-built binaries in [Releases](https://github.com/Snoozeds/ya
 ## Manually building
 Requires [.NET 6.0+](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 
-### Shell script (Linux):
+### Shell script:
 **Sudo is usually required to move the built binary to `/usr/local/bin`.** <br />
 You may also change the DESTINATION_DIR variable within the sh file.
 ```
