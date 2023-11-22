@@ -1,5 +1,5 @@
 # yanta
-Yet Another Note-Taking App. Built using C# &amp; Gtk.
+Yet Another Note-Taking App. Built using C# &amp; Gtk. Primarily built for Linux.
 
 Note: This app is within its very early stages, with a lot more features planned in the near future. \
 **Windows is not *currently* supported yet.** Or, rather, I have not tested this on Windows.
