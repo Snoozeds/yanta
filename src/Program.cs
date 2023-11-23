@@ -466,7 +466,7 @@ class Program
                 catch (GLib.GException ex)
                 {
                     Console.WriteLine($"Error loading CSS file: {ex.Message}");
-                    ShowErrorMessageDialog("Invalid CSS file", "The selected CSS file contains errors and could not be loaded. Please make sure the CSS file you are uploading is from a gtk-3.x theme, and does not point to another file.");
+                    ShowErrorMessageDialog("Invalid CSS file", "The selected CSS file contains errors and could not be loaded. Please make sure the CSS file you are uploading is from a gtk-3.x theme, and does not point to another file.", window);
                 }
             }
         };
@@ -479,10 +479,21 @@ class Program
             newNoteLabel.QueueDraw();
         }
 
-        static void ShowErrorMessageDialog(string title, string message)
+        static void ShowErrorMessageDialog(string title, string message, Window window)
         {
             using var errorDialog = new MessageDialog(null, DialogFlags.Modal, MessageType.Error, ButtonsType.Ok, message);
             errorDialog.Title = title;
+
+            errorDialog.Realized += (sender, e) =>
+            {
+                window.GetPosition(out int mainWindowX, out int mainWindowY);
+
+                int dialogX = mainWindowX + (window.Allocation.Width - errorDialog.Allocation.Width) / 2;
+                int dialogY = mainWindowY + (window.Allocation.Height - errorDialog.Allocation.Height) / 2;
+
+                errorDialog.Move(dialogX, dialogY);
+            };
+
             errorDialog.Run();
             errorDialog.Destroy();
         }
