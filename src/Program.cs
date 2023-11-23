@@ -466,7 +466,8 @@ class Program
                 catch (GLib.GException ex)
                 {
                     Console.WriteLine($"Error loading CSS file: {ex.Message}");
-                    ShowErrorMessageDialog("Invalid CSS file", "The selected CSS file contains errors and could not be loaded. Please make sure the CSS file you are uploading is from a gtk-3.x theme, and does not point to another file.", window);
+                    ShowErrorMessageDialog("Invalid CSS file", "The selected CSS file contains errors and could not be loaded. Please make sure the CSS file you are uploading is from a gtk-3.x theme, and does not point to another file.\n\nFalling back to default system theme.", window);
+                    config.CustomCssPath = string.Empty;
                 }
             }
         };
