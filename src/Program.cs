@@ -38,7 +38,7 @@ class Program
 
                     // Ask the user if they want to delete the invalid path
                     string error = ex.Message;
-                    bool deleteCustomCssPath = ShowDeleteCssDialog(config.CustomCssPath, error, window);
+                    bool deleteCustomCssPath = ShowDeleteCssDialog(config.CustomCssPath, error);
 
                     if (deleteCustomCssPath)
                     {
@@ -58,7 +58,7 @@ class Program
         return new AppConfig();
     }
 
-    static bool ShowDeleteCssDialog(string invalidCssPath, string error, Window window)
+    static bool ShowDeleteCssDialog(string invalidCssPath, string error)
     {
         // Escape special characters in error
         string escapedError = GLib.Markup.EscapeText(error);
