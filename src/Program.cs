@@ -235,24 +235,64 @@ class Program
                 "Cancel", ResponseType.Cancel,
                 "Open", ResponseType.Accept);
 
-            fileChooser.Filter = new FileFilter();
-            fileChooser.Filter.AddPattern("*.txt");
-            fileChooser.Filter.Name = "Text files (*.txt)";
-
             if (fileChooser.Run() == (int)ResponseType.Accept)
             {
                 string filePath = fileChooser.Filename;
-                string fileContent = System.IO.File.ReadAllText(filePath);
-                textView.Buffer.Text = fileContent;
-                initialNoteContent = fileContent;
-                newNoteLabel.Text = Path.GetFileName(filePath);
 
-                isFileOpened = true;
-                isFileSaved = false;
-                openedFilePath = filePath;
+                // Check if the file is readable text
+                if (IsTextFile(filePath))
+                {
+                    try
+                    {
+                        string fileContent = System.IO.File.ReadAllText(filePath);
+                        textView.Buffer.Text = fileContent;
+                        initialNoteContent = fileContent;
+                        newNoteLabel.Text = Path.GetFileName(filePath);
+
+                        isFileOpened = true;
+                        isFileSaved = false;
+                        openedFilePath = filePath;
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowErrorMessageDialog("Error opening file", $"{ex.Message}", window);
+                    }
+                }
+                else
+                {
+                    ShowErrorMessageDialog("Unsupported File Type", "This file type is not supported.", window);
+                }
             }
         };
         fileMenu.Append(openMenuItem);
+
+        // Check if file type is text
+        static bool IsTextFile(string filePath)
+        {
+            try
+            {
+                const int readLength = 1024;
+                using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+                byte[] buffer = new byte[readLength];
+
+                int bytesRead = stream.Read(buffer, 0, readLength);
+
+                // Check for common byte patterns indicative of text files
+                for (int i = 0; i < bytesRead; i++)
+                {
+                    byte currentByte = buffer[i];
+                    if (currentByte < 32 && currentByte != 9 && currentByte != 10 && currentByte != 13)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
 
         // Allow saving file
         var saveMenuItem = new MenuItem("Save");
@@ -271,7 +311,7 @@ class Program
             }
             else if (isFileSaved)
             {
-                System.IO.File.WriteAllText(newNoteLabel.Text, noteText);
+                System.IO.File.WriteAllText(openedFilePath, noteText);
                 isFileModified = false;
                 UpdateWindowTitle(window, newNoteLabel, isFileModified);
             }
@@ -284,7 +324,6 @@ class Program
                     "Cancel", ResponseType.Cancel,
                     "Save", ResponseType.Accept);
 
-                fileChooser.CurrentName = "untitled.txt";
                 fileChooser.Filter = new FileFilter();
                 fileChooser.Filter.AddPattern("*.txt");
                 fileChooser.Filter.Name = "Text files (*.txt)";
@@ -316,7 +355,7 @@ class Program
                 "Cancel", ResponseType.Cancel,
                 "Save", ResponseType.Accept);
 
-            fileChooser.CurrentName = newNoteLabel.Text + ".txt"; // Default to the current file name
+            fileChooser.CurrentName = newNoteLabel.Text;
             fileChooser.Filter = new FileFilter();
             fileChooser.Filter.AddPattern("*.txt");
             fileChooser.Filter.Name = "Text files (*.txt)";
