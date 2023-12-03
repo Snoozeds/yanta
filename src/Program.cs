@@ -184,7 +184,7 @@ class Program
         countBox.PackStart(paragraphCountLabel, false, false, 5);
         countBox.PackStart(wordCountLabel, false, false, 5);
         countBox.PackStart(charCountLabel, false, false, 5);
-        alignment.Add(countBox); // add the alignment to the countBox
+        alignment.Add(countBox); // add the countBox to the alignment
 
         textView.Buffer.Changed += (sender, e) =>
         {
@@ -684,8 +684,6 @@ class Program
         var mainBox = new VBox();
         mainBox.PackStart(menuBar, false, false, 0);
         mainBox.PackStart(notebook, true, true, 0);
-        mainBox.PackEnd(countBox, false, false, 0);
-        mainBox.PackEnd(countBox, false, false, 0);
         mainBox.PackEnd(alignment, false, false, 0); // alignment for character, line, etc. counters.
         window.Add(mainBox);
 
