@@ -6,7 +6,7 @@ Note: This app is within its very early stages, with a lot more features planned
 
 ## Showcase
 Image of Yanta program using the Nord theme. <br/><br/>
-<a href="https://raw.githubusercontent.com/Snoozeds/yanta/main/showcase/images/1.png" target="_blank"><img src="/showcase/images/1.png" alt="Image of Yanta program using the Nord theme." width="500"/></a>
+<a href="https://raw.githubusercontent.com/Snoozeds/yanta/main/showcase/images/1.png"><img src="/showcase/images/1.png" alt="Image of Yanta program using the Nord theme." width="500"/></a>
 
 # Installation
 You can download pre-built binaries in [Releases](https://github.com/Snoozeds/yanta/releases), or manually build using the instructions below.
