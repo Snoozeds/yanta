@@ -378,15 +378,18 @@ class Program
         {
             if (isFileModified)
             {
-                using var dialog = new MessageDialog(null, DialogFlags.Modal, MessageType.Question, ButtonsType.YesNo,
-                $"This file has been modifed, do you wish to save it before closing?");
+                using var dialog = new MessageDialog(null, DialogFlags.Modal, MessageType.Question, ButtonsType.None,
+                $"This file has been modified. Do you wish to save it before closing?");
+
+                dialog.AddButton("Yes", ResponseType.Yes);
+                dialog.AddButton("No", ResponseType.No);
+                dialog.AddButton("Cancel", ResponseType.Cancel);
 
                 dialog.Realized += (sender, e) =>
                 {
                     // Get the main window's position
                     window.GetPosition(out int mainWindowX, out int mainWindowY);
 
-                    // Calculate the center position for the dialog within the main window
                     int dialogX = mainWindowX + (window.Allocation.Width - dialog.Allocation.Width) / 2;
                     int dialogY = mainWindowY + (window.Allocation.Height - dialog.Allocation.Height) / 2;
 
@@ -394,16 +397,16 @@ class Program
                 };
 
                 var response = (ResponseType)dialog.Run();
-                dialog.Destroy();
 
                 if (response == ResponseType.Yes)
                 {
                     SaveFile(textView, newNoteLabel, openedFilePath);
                 }
+                else if (response == ResponseType.No)
+                {
+                    Gtk.Application.Quit();
+                }
             }
-
-            SaveConfig(config);
-            Gtk.Application.Quit();
         };
         fileMenu.Append(new SeparatorMenuItem());
         fileMenu.Append(quitMenuItem);
@@ -610,11 +613,14 @@ class Program
 
         window.DeleteEvent += (o, args) =>
         {
-
             if (isFileModified)
             {
-                using var dialog = new MessageDialog(null, DialogFlags.Modal, MessageType.Question, ButtonsType.YesNo,
-                $"This file has been modifed, do you wish to save it before closing?");
+                using var dialog = new MessageDialog(null, DialogFlags.Modal, MessageType.Question, ButtonsType.None,
+                $"This file has been modified. Do you wish to save it before closing?");
+
+                dialog.AddButton("Yes", ResponseType.Yes);
+                dialog.AddButton("No", ResponseType.No);
+                dialog.AddButton("Cancel", ResponseType.Cancel);
 
                 dialog.Realized += (sender, e) =>
                 {
@@ -634,10 +640,16 @@ class Program
                 {
                     SaveFile(textView, newNoteLabel, openedFilePath);
                 }
+                else if (response == ResponseType.No)
+                {
+                    Gtk.Application.Quit();
+                }
             }
-
-            SaveConfig(config);
-            Gtk.Application.Quit();
+            else
+            {
+                SaveConfig(config);
+                Gtk.Application.Quit();
+            }
         };
 
         void SaveFile(SourceView textView, Label newNoteLabel, string filePath)
@@ -668,7 +680,8 @@ class Program
                 fileChooser.Filter.AddPattern("*.txt");
                 fileChooser.Filter.Name = "Text files (*.txt)";
 
-                if (fileChooser.Run() == (int)ResponseType.Accept)
+                var response = (ResponseType)fileChooser.Run();
+                if (response == ResponseType.Accept)
                 {
                     string newFilePath = fileChooser.Filename;
                     System.IO.File.WriteAllText(newFilePath, noteText);
@@ -684,7 +697,7 @@ class Program
         var mainBox = new VBox();
         mainBox.PackStart(menuBar, false, false, 0);
         mainBox.PackStart(notebook, true, true, 0);
-        mainBox.PackEnd(alignment, false, false, 0); // alignment for character, line, etc. counters.
+        mainBox.PackStart(alignment, false, false, 0); // alignment for character, line, etc. counters.
         window.Add(mainBox);
 
         window.ShowAll();
