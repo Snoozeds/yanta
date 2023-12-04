@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DESTINATION_DIR="/usr/local/bin"
+DESTINATION_DIR="/usr/local/bin/yanta"
 
 # Build
 dotnet build
