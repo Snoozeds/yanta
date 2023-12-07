@@ -355,7 +355,12 @@ class Program
                 "Cancel", ResponseType.Cancel,
                 "Save", ResponseType.Accept);
 
-            fileChooser.CurrentName = newNoteLabel.Text;
+            var name = newNoteLabel.Text;
+            if (name.EndsWith("*"))
+            {
+                name = name[..^2];
+            }
+            fileChooser.CurrentName = name + ".txt";
             fileChooser.Filter = new FileFilter();
             fileChooser.Filter.AddPattern("*.txt");
             fileChooser.Filter.Name = "Text files (*.txt)";
@@ -675,7 +680,12 @@ class Program
                     "Cancel", ResponseType.Cancel,
                     "Save", ResponseType.Accept);
 
-                fileChooser.CurrentName = newNoteLabel.Text + ".txt"; // Default to the current file name
+                var name = newNoteLabel.Text;
+                if (name.EndsWith("*"))
+                {
+                    name = name[..^2];
+                }
+                fileChooser.CurrentName = name + ".txt"; // Default to the current file name
                 fileChooser.Filter = new FileFilter();
                 fileChooser.Filter.AddPattern("*.txt");
                 fileChooser.Filter.Name = "Text files (*.txt)";
